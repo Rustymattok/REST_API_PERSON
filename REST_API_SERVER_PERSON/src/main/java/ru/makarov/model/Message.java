@@ -10,10 +10,10 @@ public class Message {
     private int id;
     private String content;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name ="person_id")
+    @JoinColumn(name = "person_id")
     private Person person;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name ="room_id")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     public int getId() {

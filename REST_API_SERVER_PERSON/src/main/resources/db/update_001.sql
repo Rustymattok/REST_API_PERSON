@@ -1,6 +1,6 @@
 create table person (
    id serial primary key not null,
-   login varchar(2000),
+   username varchar(2000),
    password varchar(2000)
 );
 
@@ -23,6 +23,6 @@ CREATE TABLE message
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-insert into person (login, password) values ('Rustymattok', '123');
-insert into room (name) values ('chat1');
-insert into message (content,person_id,room_id) values ('privet drug',1,1)
+-- insert into person (username, password) values ('Rustymattok', '123');
+-- insert into room (name) values ('chat1');
+-- insert into message (content,person_id,room_id) values ('privet drug',1,1)

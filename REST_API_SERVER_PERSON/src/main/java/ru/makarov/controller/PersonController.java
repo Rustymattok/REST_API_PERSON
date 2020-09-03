@@ -1,7 +1,9 @@
 package ru.makarov.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.makarov.model.Person;
 import ru.makarov.repository.PersonRepository;
@@ -15,10 +17,14 @@ import java.util.stream.StreamSupport;
  */
 @RestController
 public class PersonController {
-    private final PersonRepository persons;
 
-    public PersonController(final PersonRepository persons) {
+    private final PersonRepository persons;
+    private final BCryptPasswordEncoder encoder;
+
+    @Autowired
+    public PersonController(PersonRepository persons, BCryptPasswordEncoder encoder) {
         this.persons = persons;
+        this.encoder = encoder;
     }
 
     /**
@@ -34,6 +40,18 @@ public class PersonController {
     }
 
     /**
+     * Rest Api - for regestration new user.
+     *
+     * @param person - to register in DataBase.
+     */
+    @PostMapping("/sign-up")
+    public void signUp(@RequestBody Person person) {
+        person.setPassword(encoder.encode(person.getPassword()));
+        person.setUsername(person.getUsername());
+        persons.save(person);
+    }
+
+    /**
      * Sample GET req: curl -i http://localhost:8080/person/1.
      *
      * @param id - person by ID for return.
@@ -46,17 +64,4 @@ public class PersonController {
         return new ResponseEntity<Person>(person, flag ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Sample POST req: curl -H 'Content-Type: application/json' -X POST -d '{"login":"job4j@gmail.com","password":"123"}' http://localhost:8080/person/.
-     *
-     * @param person - in JSON {:} format.
-     * @return - post result. add parameter to DATA.
-     */
-    @PostMapping("/person")
-    public ResponseEntity<Person> create(@RequestBody Person person) {
-        return new ResponseEntity<Person>(
-                this.persons.save(person),
-                HttpStatus.CREATED
-        );
-    }
 }
